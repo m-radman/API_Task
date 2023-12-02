@@ -3,7 +3,6 @@ const { faker } = require("@faker-js/faker")
 
 const BASE_URL = "https://demoqa.com"
 
-let userID
 const username = "moki"
 const password = "AraRara1123!"
 
@@ -16,7 +15,6 @@ describe("Register user tests", () => {
             })
         expect(response.status).toEqual(201)
         expect(response.body).toHaveProperty("userID")
-        userID = response.body.userID
     })
 
     it("Fail to register user with already taken password", async () => {
