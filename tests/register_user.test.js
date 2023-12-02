@@ -1,5 +1,4 @@
 const request = require("supertest")
-const { faker } = require("@faker-js/faker")
 
 const BASE_URL = "https://demoqa.com"
 
@@ -31,7 +30,7 @@ describe("Register user tests", () => {
         const response = await request(BASE_URL).post("/Account/v1/User")
         .send({
             userName: username,
-            password: "AraRara1123"
+            password: "password"
         })
         expect(response.status).toEqual(400)
         expect(response.body.message).toContain("Passwords must have at least")

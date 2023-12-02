@@ -2,9 +2,8 @@ const request = require("supertest")
 const { faker } = require("@faker-js/faker")
 
 const BASE_URL = "https://demoqa.com"
-let TOKEN
-let USER_ID
 
+let TOKEN
 const username = "moki"
 const password = "AraRara1123!"
 
@@ -41,8 +40,6 @@ describe("Login user tests", () => {
         expect(response.body.username).toEqual(username)
         expect(response.body.token).toEqual(TOKEN)
         expect(response.body).toHaveProperty("userId")
-
-        USER_ID = response.body.userId
     })
     
     it("Fail to login user with invalid credentials", async () => {
