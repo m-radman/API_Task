@@ -8,14 +8,15 @@
     "test:register": "jest register_user.test.js",
     "test:login": "jest login_user.test.js",
     "test:add": "jest add_books.test.js",
-    "test:delete": "jest delete_books.test.js"
+    "test:delete": "jest delete_books.test.js",
+    "postman:bookstoreflow": "newman run postman/BookStoreFlow_API.postman_collection"
   },
   "author": "mradman",
   "license": "ISC",
   "devDependencies": {
-    "@faker-js/faker": "^8.3.1",
     "@types/jest": "^29.5.10",
     "jest": "^29.7.0",
+    "newman": "^6.0.0",
     "supertest": "^6.3.3"
   }
 }
