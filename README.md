@@ -31,4 +31,6 @@ To run tests locally please follow the steps:
     - run adding books tests  
         > npm run test:add  
     - run delete tests  
-        > npm run test:delete
+        > npm run test:delete  
+    - run postman bookstore test  
+        > npm run postman:bookstoreflow 
