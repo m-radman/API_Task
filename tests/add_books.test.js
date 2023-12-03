@@ -1,37 +1,31 @@
 const request = require("supertest")
+const { BASE_URL, USER_1 } = require("../helpers/constants")
 
-const BASE_URL = "https://demoqa.com"
-const USER = {
-    userId: "4d328c96-ebe5-4c60-b273-4a8d3515f357",
-    userName: "moki",
-    password: "AraRara1123!"
-}
 const BOOK_ISBN_TO_ADD_TO_COLLECTION = "9781593277574"
-
 let USER_TOKEN = ''
 
-describe("Books manipulation tests", () => {
+describe("Books addition tests", () => {
 
     beforeAll(async () => {
         const authResponse = await request(BASE_URL).post('/Account/v1/GenerateToken')
             .send({
-                userName: USER.userName,
-                password: USER.password
+                userName: USER_1.userName,
+                password: USER_1.password
             })
 
         await request(BASE_URL).post('/Account/v1/Login')
             .send({
-                userName: USER.userName,
-                password: USER.password
+                userName: USER_1.userName,
+                password: USER_1.password
             })
 
         USER_TOKEN = authResponse.body.token
 
-        await request(BASE_URL).delete(`/BookStore/v1/Books?UserId=${USER.userId}`).set("Authorization", `Bearer ${USER_TOKEN}`)
+        await request(BASE_URL).delete(`/BookStore/v1/Books?UserId=${USER_1.userId}`).set("Authorization", `Bearer ${USER_TOKEN}`)
     })
 
     afterAll(async () => {
-        await request(BASE_URL).delete(`/BookStore/v1/Books?UserId=${USER.userId}`).set("Authorization", `Bearer ${USER_TOKEN}`)
+        await request(BASE_URL).delete(`/BookStore/v1/Books?UserId=${USER_1.userId}`).set("Authorization", `Bearer ${USER_TOKEN}`)
     })
 
     it("Get list of all books", async () => {
@@ -44,7 +38,7 @@ describe("Books manipulation tests", () => {
         const response = await request(BASE_URL).post("/Bookstore/v1/Books")
             .set("Authorization", `Bearer ${USER_TOKEN}`)
             .send({
-                userId: USER.userId,
+                userId: USER_1.userId,
                 collectionOfIsbns: [
                     {
                         isbn: BOOK_ISBN_TO_ADD_TO_COLLECTION
@@ -53,13 +47,17 @@ describe("Books manipulation tests", () => {
             })
         expect(response.status).toBe(201)
         expect(response.body.books).toHaveLength(1)
+
+        const userResponse = await request(BASE_URL).get(`/Account/v1/User/${USER_1.userId}`)
+            .set("Authorization", `Bearer ${USER_TOKEN}`)
+        expect(userResponse.body.books[0].isbn).toEqual(BOOK_ISBN_TO_ADD_TO_COLLECTION)
     })
 
     it("Fail to add same book to users collection", async () => {
         const response = await request(BASE_URL).post("/Bookstore/v1/Books")
             .set("Authorization", `Bearer ${USER_TOKEN}`)
             .send({
-                userId: USER.userId,
+                userId: USER_1.userId,
                 collectionOfIsbns: [
                     {
                         isbn: BOOK_ISBN_TO_ADD_TO_COLLECTION
@@ -74,7 +72,7 @@ describe("Books manipulation tests", () => {
         const response = await request(BASE_URL).post("/Bookstore/v1/Books")
             .set("Authorization", `Bearer ${USER_TOKEN}`)
             .send({
-                userId: USER.userId,
+                userId: USER_1.userId,
                 collectionOfIsbns: [
                     {
                         isbn: "978144932586"
@@ -99,9 +97,4 @@ describe("Books manipulation tests", () => {
         expect(response.status).toBe(401)
         expect(response.body.message).toContain("User Id not correct")
     })
-    
-
-
-    // TODO: add a case for validating that already Added IDBN gives back 400 with this particular message 
-    // {"code":"1210","message":"ISBN already present in the User's Collection!"}
 })

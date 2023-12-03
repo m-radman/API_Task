@@ -1,16 +1,12 @@
 const request = require("supertest")
-
-const BASE_URL = "https://demoqa.com"
-
-const username = "moki"
-const password = "AraRara1123!"
+const { BASE_URL, USER_3 } = require("../helpers/constants")
 
 describe("Register user tests", () => {
     it("Register new user successfully", async () => {
         const response = await request(BASE_URL).post("/Account/v1/User")
             .send({
-                userName: username,
-                password: password + Math.random()
+                userName: USER_3.userName,
+                password: USER_3.password
             })
         expect(response.status).toEqual(201)
         expect(response.body).toHaveProperty("userID")
@@ -19,8 +15,8 @@ describe("Register user tests", () => {
     it("Fail to register user with already taken password", async () => {
         const response = await request(BASE_URL).post("/Account/v1/User")
         .send({
-            userName: username,
-            password: password
+            userName: USER_3.userName,
+            password: USER_3.password
         })
         expect(response.status).toEqual(406)
         expect(response.body).toHaveProperty("message", "User exists!")
@@ -29,7 +25,7 @@ describe("Register user tests", () => {
     it("Fail to register user if password does not meets the requirements", async () => {
         const response = await request(BASE_URL).post("/Account/v1/User")
         .send({
-            userName: username,
+            userName: USER_3.userName,
             password: "password"
         })
         expect(response.status).toEqual(400)
@@ -40,7 +36,7 @@ describe("Register user tests", () => {
         const response = await request(BASE_URL).post("/Account/v1/User")
         .send({
             userName: "",
-            password: password
+            password: USER_3.password
         })
         expect(response.status).toEqual(400)
         expect(response.body.message).toContain("UserName and Password required")
@@ -49,8 +45,8 @@ describe("Register user tests", () => {
     it("Fail to register due to misspelled url path", async () => {
         const response = await request(BASE_URL).post("/Account/v1/Use")
         .send({
-            userName: username,
-            password: password
+            userName: USER_3.userName,
+            password: USER_3.password
         })
         expect(response.status).toEqual(404)
     })
