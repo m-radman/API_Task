@@ -4,7 +4,11 @@
   "description": "qa test task",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest",
+    "test:register": "jest register_user.test.js",
+    "test:login": "jest login_user.test.js",
+    "test:add": "jest add_books.test.js",
+    "test:delete": "jest delete_books.test.js"
   },
   "author": "mradman",
   "license": "ISC",
